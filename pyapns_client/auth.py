@@ -6,7 +6,6 @@
 
 import time
 from typing import Any, Dict, Union
-from httpx import Request
 
 import jwt
 from cryptography.hazmat.backends import default_backend
