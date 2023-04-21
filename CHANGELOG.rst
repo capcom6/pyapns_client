@@ -1,5 +1,11 @@
 3.0
 ===
+3.0.6
+-----
+Added
+^^^^^
+- some tests with Python version 3.6-3.11
+
 3.0.5
 -----
 
