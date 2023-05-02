@@ -34,7 +34,6 @@ class IOSPayloadAlert(_PayloadAlert):
         subtitle_loc_args=None,
         loc_key=None,
         loc_args=None,
-        action_loc_key=None,
         launch_image=None,
     ):
         super().__init__(title=title, body=body)
@@ -46,7 +45,6 @@ class IOSPayloadAlert(_PayloadAlert):
         self.subtitle_loc_args = subtitle_loc_args
         self.loc_key = loc_key
         self.loc_args = loc_args
-        self.action_loc_key = action_loc_key
         self.launch_image = launch_image
 
     def to_dict(self, alert_body=None):
@@ -65,8 +63,6 @@ class IOSPayloadAlert(_PayloadAlert):
             d["loc-key"] = self.loc_key
         if self.loc_args:
             d["loc-args"] = self.loc_args
-        if self.action_loc_key:
-            d["action-loc-key"] = self.action_loc_key
         if self.launch_image:
             d["launch-image"] = self.launch_image
         return d
