@@ -178,7 +178,7 @@ class _Payload:
             dict: A dictionary representation of the payload.
         """
         d = {"aps": {}}
-        if not self.alert is None:
+        if self.alert is not None:
             d["aps"]["alert"] = self.alert.to_dict(alert_body=alert_body)
         d.update(self.custom)
         return d

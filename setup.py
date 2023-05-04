@@ -1,20 +1,30 @@
 import os
-from setuptools import setup, Command
+from distutils.command.clean import clean as _clean
+
+from setuptools import setup
 
 
-class CleanCommand(Command):
-    """Custom clean command to tidy up the project root."""
-
-    user_options = []
-
-    def initialize_options(self):
-        pass
-
-    def finalize_options(self):
-        pass
+class CleanCommand(_clean):
+    """
+    A custom clean command to remove build artifacts.
+    """
 
     def run(self):
-        os.system("rm -vrf ./build ./dist ./*.pyc ./*.tgz ./*.egg-info")
+        import os
+        import shutil
+
+        # remove the build directory
+        build_dir = os.path.join(os.path.dirname(__file__), "build")
+        shutil.rmtree(build_dir, ignore_errors=True)
+
+        # remove any compiled Python files
+        for root, dirs, files in os.walk(os.path.dirname(__file__)):
+            for file in files:
+                if file.endswith(".pyc") or file.endswith(".pyo") or file.endswith("~"):
+                    os.remove(os.path.join(root, file))
+
+        # call the base class's run method
+        _clean.run(self)
 
 
 # allow setup.py to be run from any path
@@ -64,7 +74,15 @@ setup(
     install_requires=[
         "httpx[http2]",
         "PyJWT>=2",
-        "cryptography",
+        "cryptography>=40.0.2",
         "pytz",
     ],
+    extras_require={
+        "dev": [
+            "pytest",
+            "black",
+            "flake8",
+            "wheel",
+        ]
+    },
 )

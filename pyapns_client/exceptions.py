@@ -1,8 +1,9 @@
-import pytz
 from datetime import datetime
 
+import pytz
 
 # BASE
+
 
 class APNSException(Exception):
     """
@@ -49,6 +50,7 @@ class APNSProgrammingException(APNSException):
 
 # CONNECTION
 
+
 class APNSConnectionException(APNSServerException):
     """
     Used when a connectinon to APNS servers fails.
@@ -59,6 +61,7 @@ class APNSConnectionException(APNSServerException):
 
 
 # APNS REASONS
+
 
 class BadCollapseIdException(APNSProgrammingException):
     """
