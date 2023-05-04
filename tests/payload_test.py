@@ -2,7 +2,13 @@ import typing
 
 import pytest
 
-from pyapns_client import IOSPayload, IOSPayloadAlert, SafariPayload, SafariPayloadAlert
+from pyapns_client import (
+    IOSNotification,
+    IOSPayload,
+    IOSPayloadAlert,
+    SafariPayload,
+    SafariPayloadAlert,
+)
 
 
 # iOS
@@ -64,6 +70,34 @@ def test_ios_payload():
         ios_payload.to_json()
         == b'{"aps":{"alert":{"body":"my_alert"},"badge":2,"category":"my_category","content-available":1,"mutable-content":1,"sound":"chime","thread-id":"42"},"extra":"something"}'
     )
+
+
+def test_ios_notification():
+    ios_payload = IOSPayload(
+        alert="my_alert",
+        badge=2,
+        sound="chime",
+        content_available=True,
+        mutable_content=True,
+        category="my_category",
+        custom={"extra": "something"},
+        thread_id="42",
+    )
+    notification = IOSNotification(
+        ios_payload, "com.example.test", priority=IOSNotification.PRIORITY_LOW
+    )
+
+    assert notification.get_json_data() == (
+        b'{"aps":{"alert":{"body":"my_alert"},"badge":2,"category":"my_category",'
+        b'"content-available":1,"mutable-content":1,"sound":"chime","thread-id":"42"},'
+        b'"extra":"something"}'
+    )
+
+    assert notification.get_headers() == {
+        "Content-Type": "application/json; charset=utf-8",
+        "apns-priority": "5",
+        "apns-topic": "com.example.test",
+    }
 
 
 def test_ios_payload_with_ios_payload_alert(ios_payload_alert: IOSPayloadAlert):
