@@ -2,9 +2,16 @@
 ===
 3.0.6
 -----
+Changed
+^^^^^^^
+- allow to use `str` as alert for notification payload (by @tartansandal)
+
 Added
 ^^^^^
 - some tests with Python version 3.6-3.11
+- some payload serialization tests (by @tartansandal)
+- some type annotations
+- some docstrings
 
 3.0.5
 -----
