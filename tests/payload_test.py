@@ -1,12 +1,11 @@
+import typing
+
 import pytest
-from pyapns_client import (
-    IOSPayload,
-    IOSPayloadAlert,
-    SafariPayload,
-    SafariPayloadAlert,
-)
+
+from pyapns_client import IOSPayload, IOSPayloadAlert, SafariPayload, SafariPayloadAlert
 
 
+# iOS
 @pytest.fixture
 def ios_payload_alert():
     return IOSPayloadAlert(
@@ -23,7 +22,7 @@ def ios_payload_alert():
     )
 
 
-def test_ios_payload_alert(ios_payload_alert):
+def test_ios_payload_alert(ios_payload_alert: IOSPayloadAlert):
     assert ios_payload_alert.to_dict() == {
         "title": "title",
         "title-loc-key": "title_loc_k",
@@ -39,7 +38,7 @@ def test_ios_payload_alert(ios_payload_alert):
 
 
 def test_ios_payload():
-    payload = IOSPayload(
+    ios_payload = IOSPayload(
         alert="my_alert",
         badge=2,
         sound="chime",
@@ -49,9 +48,9 @@ def test_ios_payload():
         custom={"extra": "something"},
         thread_id="42",
     )
-    assert payload.to_dict() == {
+    assert ios_payload.to_dict() == {
         "aps": {
-            "alert": "my_alert",
+            "alert": {"body": "my_alert"},
             "badge": 2,
             "sound": "chime",
             "content-available": 1,
@@ -61,9 +60,13 @@ def test_ios_payload():
         },
         "extra": "something",
     }
+    assert (
+        ios_payload.to_json()
+        == b'{"aps":{"alert":{"body":"my_alert"},"badge":2,"category":"my_category","content-available":1,"mutable-content":1,"sound":"chime","thread-id":"42"},"extra":"something"}'
+    )
 
 
-def test_ios_payload_with_ios_payload_alert(ios_payload_alert):
+def test_ios_payload_with_ios_payload_alert(ios_payload_alert: IOSPayloadAlert):
     payload = IOSPayload(
         alert=ios_payload_alert,
         badge=2,
@@ -97,54 +100,70 @@ def test_ios_payload_with_ios_payload_alert(ios_payload_alert):
         },
         "extra": "something",
     }
+    assert (
+        payload.to_json()
+        == b'{"aps":{"alert":{"body":"body","launch-image":"img","loc-args":["body_loc_a"],"loc-key":"body_loc_k","subtitle":"subtitle","subtitle-loc-args":["subtitle_loc_a"],"subtitle-loc-key":"subtitle_loc_k","title":"title","title-loc-args":["title_loc_a"],"title-loc-key":"title_loc_k"},"badge":2,"category":"my_category","content-available":1,"mutable-content":1,"sound":"chime","thread-id":"42"},"extra":"something"}'
+    )
+
+
+# Safari
+@pytest.fixture
+def safari_payload_alert(action: typing.Union[str, None]):
+    return SafariPayloadAlert(title="title", body="body", action=action)
 
 
 @pytest.fixture
-def safari_payload_alert():
-    return SafariPayloadAlert(
-        title="title",
-        body="body",
-        action="send",
+def safari_payload(
+    alert: typing.Union[SafariPayloadAlert, str],
+    url_args: typing.Union[typing.List[str], None],
+):
+    return SafariPayload(
+        alert=alert,
+        url_args=url_args,
+        custom={"extra": "something"},
     )
 
 
-def test_safari_payload_alert(safari_payload_alert):
-    assert safari_payload_alert.to_dict() == {
+@pytest.mark.parametrize(
+    "action,additional_fields", [(None, {}), ("send", {"action": "send"})]
+)
+def test_safari_payload_alert(
+    safari_payload_alert: SafariPayloadAlert,
+    additional_fields: typing.Dict[str, typing.Any],
+):
+    expected = {
         "title": "title",
         "body": "body",
-        "action": "send",
     }
+    expected.update(additional_fields)
+
+    assert safari_payload_alert.to_dict() == expected
 
 
-def test_safari_payload():
-    payload = SafariPayload(
-        alert="my_alert",
-        # url_args = "args"  # omit this to test default
-        custom={"extra": "something"},
-    )
-    assert payload.to_dict() == {
-        "aps": {
-            "alert": "my_alert",
-            "url-args": [],
-        },
-        "extra": "something",
-    }
-
-
-def test_safari_payload_with_safari_payload_alert(safari_payload_alert):
-    payload = SafariPayload(
-        alert=safari_payload_alert,
-        url_args="args",
-        custom={"extra": "something"},
-    )
-    assert payload.to_dict() == {
-        "aps": {
-            "alert": {
+@pytest.mark.parametrize(
+    "url_args,expected_url_args", [(None, []), (["args"], ["args"])]
+)
+@pytest.mark.parametrize(
+    "alert,expected_alert",
+    [
+        ("my_alert", {"body": "my_alert"}),
+        (
+            SafariPayloadAlert(title="title", body="body", action="send"),
+            {
                 "title": "title",
                 "body": "body",
                 "action": "send",
             },
-            "url-args": "args",
+        ),
+    ],
+)
+def test_safari_payload(
+    safari_payload: SafariPayload, expected_url_args, expected_alert
+):
+    assert safari_payload.to_dict() == {
+        "aps": {
+            "alert": expected_alert,
+            "url-args": expected_url_args,
         },
         "extra": "something",
     }

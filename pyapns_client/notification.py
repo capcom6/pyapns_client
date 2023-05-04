@@ -1,16 +1,43 @@
 import json
+import typing
 from math import floor
 from typing import Any, Dict
 
 
 class _PayloadAlert:
-    def __init__(self, title=None, body=None):
+    """
+    Represents an alert payload for a push notification service.
+    """
+
+    def __init__(
+        self,
+        title: typing.Union[str, None] = None,
+        body: typing.Union[str, None] = None,
+    ):
+        """
+        Initializes a new instance of the `_PayloadAlert` class.
+
+        Args:
+            title (str or None): The title of the alert.
+            body (str or None): The body text of the alert.
+
+        """
         super().__init__()
 
         self.title = title
         self.body = body
 
-    def to_dict(self, alert_body=None):
+    def to_dict(self, alert_body: typing.Union[str, None] = None):
+        """
+        Converts the alert payload to a dictionary.
+
+        Args:
+            alert_body (str or None): The body text of the alert. If not provided, the `body` attribute of this instance will be used.
+
+        Returns:
+            dict: A dictionary representation of the alert payload.
+
+        """
         if alert_body is None:
             alert_body = self.body
 
@@ -69,12 +96,37 @@ class IOSPayloadAlert(_PayloadAlert):
 
 
 class SafariPayloadAlert(_PayloadAlert):
-    def __init__(self, title=None, body=None, action=None):
+    """
+    Represents an alert payload for Safari push notifications.
+
+    This class inherits from the `_PayloadAlert` class and adds an `action` attribute.
+    """
+
+    def __init__(self, title: str, body: str, action: typing.Union[str, None] = None):
+        """
+        Initializes a new instance of the `SafariPayloadAlert` class.
+
+        Args:
+            title (str): The title of the alert.
+            body (str): The body text of the alert.
+            action (str or None): The action associated with the alert.
+
+        """
         super().__init__(title=title, body=body)
 
         self.action = action
 
-    def to_dict(self, alert_body=None):
+    def to_dict(self, alert_body: typing.Union[str, None] = None):
+        """
+        Converts the alert payload to a dictionary.
+
+        Args:
+            alert_body (str or None): The body text of the alert. If not provided, the `body` attribute of this instance will be used.
+
+        Returns:
+            dict: A dictionary representation of the alert payload.
+
+        """
         d = super().to_dict(alert_body=alert_body)
         if self.action:
             d["action"] = self.action
@@ -82,27 +134,62 @@ class SafariPayloadAlert(_PayloadAlert):
 
 
 class _Payload:
-    MAX_PAYLOAD_SIZE = 2048
+    """
+    Represents a push notification payload.
 
-    def __init__(self, alert=None, custom=None):
+    Attributes:
+        MAX_PAYLOAD_SIZE (int): The maximum size of a push notification payload in bytes. See https://developer.apple.com/documentation/usernotifications/setting_up_a_remote_notification_server/generating_a_remote_notification#overview
+    """
+
+    MAX_PAYLOAD_SIZE = 4096
+
+    def __init__(
+        self, alert: typing.Union[_PayloadAlert, str, None] = None, custom=None
+    ):
+        """
+        Initializes a new instance of the `_Payload` class.
+
+        Args:
+            alert (_PayloadAlert or str or None): The alert associated with the payload.
+            custom (dict or None): Custom data associated with the payload.
+
+        Raises:
+            ValueError: If `alert` is not a string or a `_PayloadAlert` object.
+        """
         super().__init__()
 
-        self.alert = alert
+        if isinstance(alert, _PayloadAlert) or alert is None:
+            self.alert = alert
+        elif type(alert) == str:
+            # Recommended to use dictionary, see https://developer.apple.com/documentation/usernotifications/setting_up_a_remote_notification_server/generating_a_remote_notification#2943360
+            self.alert = _PayloadAlert(body=alert)
+        else:
+            raise ValueError("alert must be a string or a _PayloadAlert object")
         self.custom = custom or {}
 
-    def to_dict(self, alert_body=None):
+    def to_dict(self, alert_body: typing.Union[str, None] = None):
+        """
+        Converts the payload to a dictionary.
+
+        Args:
+            alert_body (str or None): The body text of the alert. If not provided, the `body` attribute of this instance will be used.
+
+        Returns:
+            dict: A dictionary representation of the payload.
+        """
         d = {"aps": {}}
-        if self.alert:
-            if isinstance(self.alert, _PayloadAlert):
-                d["aps"]["alert"] = self.alert.to_dict(alert_body=alert_body)
-            elif type(self.alert) == str:
-                d["aps"]["alert"] = self.alert
-            else:
-                raise ValueError("alert must be a string or a _PayloadAlert object")
+        if not self.alert is None:
+            d["aps"]["alert"] = self.alert.to_dict(alert_body=alert_body)
         d.update(self.custom)
         return d
 
     def to_json(self):
+        """
+        Converts the payload to a JSON string.
+
+        Returns:
+            bytes: A JSON string representation of the payload.
+        """
         # This method automatically truncates self.alert.body if it's long.
         json_data = self._to_json()
 
@@ -121,7 +208,16 @@ class _Payload:
 
         return json_data
 
-    def _to_json(self, alert_body=None):
+    def _to_json(self, alert_body: typing.Union[str, None] = None):
+        """
+        Converts the payload to a JSON string.
+
+        Args:
+            alert_body (str or None): The body text of the alert. If not provided, the `body` attribute of the `_PayloadAlert` object will be used.
+
+        Returns:
+            bytes: A JSON string representation of the payload.
+        """
         return json.dumps(
             self.to_dict(alert_body=alert_body), separators=(",", ":"), sort_keys=True
         ).encode("utf-8")
@@ -130,7 +226,7 @@ class _Payload:
 class IOSPayload(_Payload):
     def __init__(
         self,
-        alert=None,
+        alert: typing.Union[_PayloadAlert, str, None] = None,
         badge=None,
         sound=None,
         category=None,
@@ -178,12 +274,17 @@ class IOSPayload(_Payload):
 
 
 class SafariPayload(_Payload):
-    def __init__(self, alert=None, url_args=None, custom=None):
+    def __init__(
+        self,
+        alert: typing.Union[_PayloadAlert, str, None] = None,
+        url_args: typing.Union[typing.List[str], None] = None,
+        custom=None,
+    ):
         super().__init__(alert=alert, custom=custom)
 
         self.url_args = url_args or []
 
-    def to_dict(self, alert_body=None):
+    def to_dict(self, alert_body: typing.Union[str, None] = None):
         d = super().to_dict(alert_body=alert_body)
         d["aps"]["url-args"] = self.url_args
         return d
