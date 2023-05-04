@@ -1,4 +1,3 @@
 import logging
 
-
-logger = logging.getLogger('pyapns_client')
+logger = logging.getLogger("pyapns_client")
