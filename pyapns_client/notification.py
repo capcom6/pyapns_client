@@ -370,17 +370,17 @@ class _Notification:
     def get_headers(self):
         headers = {"Content-Type": "application/json; charset=utf-8"}
         if self.topic:
-            headers["apns-topic"] = self.topic
+            headers["apns-topic"] = str(self.topic)
         if self.apns_id:
-            headers["apns-id"] = self.apns_id
+            headers["apns-id"] = str(self.apns_id)
         if self.collapse_id:
-            headers["apns-collapse-id"] = self.collapse_id
+            headers["apns-collapse-id"] = str(self.collapse_id)
         if self.priority:
-            headers["apns-priority"] = self.priority
+            headers["apns-priority"] = str(self.priority)
         if self.expiration:
-            headers["apns-expiration"] = self.expiration
+            headers["apns-expiration"] = str(self.expiration)
         if self.push_type:
-            headers["apns-push-type"] = self.push_type
+            headers["apns-push-type"] = str(self.push_type)
         return headers
 
     def get_json_data(self):
