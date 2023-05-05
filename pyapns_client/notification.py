@@ -164,7 +164,10 @@ class _Payload:
             # Recommended to use dictionary, see https://developer.apple.com/documentation/usernotifications/setting_up_a_remote_notification_server/generating_a_remote_notification#2943360
             self.alert = _PayloadAlert(body=alert)
         else:
-            raise ValueError("alert must be a string or a _PayloadAlert object")
+            value_type = type(self.alert)
+            raise TypeError(
+                f"alert must be a string or _PayloadAlert object, not a '{value_type}'"
+            )
         self.custom = custom or {}
 
     def to_dict(self, alert_body: typing.Union[str, None] = None):
@@ -179,7 +182,15 @@ class _Payload:
         """
         d = {"aps": {}}
         if self.alert is not None:
-            d["aps"]["alert"] = self.alert.to_dict(alert_body=alert_body)
+            if isinstance(self.alert, _PayloadAlert):
+                d["aps"]["alert"] = self.alert.to_dict(alert_body=alert_body)
+            elif type(self.alert) == str:
+                d["aps"]["alert"] = self.alert
+            else:
+                value_type = type(self.alert)
+                raise ValueError(
+                    f"alert must be a string or _PayloadAlert object, not a '{value_type}'"
+                )
         d.update(self.custom)
         return d
 
