@@ -52,16 +52,16 @@ class _PayloadAlert:
 class IOSPayloadAlert(_PayloadAlert):
     def __init__(
         self,
-        title=None,
-        subtitle=None,
-        body=None,
-        title_loc_key=None,
-        title_loc_args=None,
-        subtitle_loc_key=None,
-        subtitle_loc_args=None,
-        loc_key=None,
-        loc_args=None,
-        launch_image=None,
+        title: Union[str, None] = None,
+        subtitle: Union[str, None] = None,
+        body: Union[str, None] = None,
+        title_loc_key: Union[str, None] = None,
+        title_loc_args: Union[List, None] = None,
+        subtitle_loc_key: Union[str, None] = None,
+        subtitle_loc_args: Union[List, None] = None,
+        loc_key: Union[str, None] = None,
+        loc_args: Union[List, None] = None,
+        launch_image: Union[str, None] = None,
     ):
         super().__init__(title=title, body=body)
 
@@ -146,9 +146,7 @@ class _Payload:
 
     MAX_PAYLOAD_SIZE = 4096
 
-    def __init__(
-        self, alert: Union[_PayloadAlert, str, None] = None, custom=None
-    ):
+    def __init__(self, alert: Union[_PayloadAlert, str, None] = None, custom=None):
         """
         Initializes a new instance of the `_Payload` class.
 
