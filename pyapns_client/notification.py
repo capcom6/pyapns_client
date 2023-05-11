@@ -1,7 +1,6 @@
 import json
-import typing
 from math import floor
-from typing import Any, Dict
+from typing import Any, Dict, List, Union
 
 
 class _PayloadAlert:
@@ -11,8 +10,8 @@ class _PayloadAlert:
 
     def __init__(
         self,
-        title: typing.Union[str, None] = None,
-        body: typing.Union[str, None] = None,
+        title: Union[str, None] = None,
+        body: Union[str, None] = None,
     ):
         """
         Initializes a new instance of the `_PayloadAlert` class.
@@ -27,7 +26,7 @@ class _PayloadAlert:
         self.title = title
         self.body = body
 
-    def to_dict(self, alert_body: typing.Union[str, None] = None):
+    def to_dict(self, alert_body: Union[str, None] = None):
         """
         Converts the alert payload to a dictionary.
 
@@ -103,7 +102,7 @@ class SafariPayloadAlert(_PayloadAlert):
     This class inherits from the `_PayloadAlert` class and adds an `action` attribute.
     """
 
-    def __init__(self, title: str, body: str, action: typing.Union[str, None] = None):
+    def __init__(self, title: str, body: str, action: Union[str, None] = None):
         """
         Initializes a new instance of the `SafariPayloadAlert` class.
 
@@ -117,7 +116,7 @@ class SafariPayloadAlert(_PayloadAlert):
 
         self.action = action
 
-    def to_dict(self, alert_body: typing.Union[str, None] = None):
+    def to_dict(self, alert_body: Union[str, None] = None):
         """
         Converts the alert payload to a dictionary.
 
@@ -148,7 +147,7 @@ class _Payload:
     MAX_PAYLOAD_SIZE = 4096
 
     def __init__(
-        self, alert: typing.Union[_PayloadAlert, str, None] = None, custom=None
+        self, alert: Union[_PayloadAlert, str, None] = None, custom=None
     ):
         """
         Initializes a new instance of the `_Payload` class.
@@ -174,7 +173,7 @@ class _Payload:
             )
         self.custom = custom or {}
 
-    def to_dict(self, alert_body: typing.Union[str, None] = None):
+    def to_dict(self, alert_body: Union[str, None] = None):
         """
         Converts the payload to a dictionary.
 
@@ -224,7 +223,7 @@ class _Payload:
 
         return json_data
 
-    def _to_json(self, alert_body: typing.Union[str, None] = None):
+    def _to_json(self, alert_body: Union[str, None] = None):
         """
         Converts the payload to a JSON string.
 
@@ -243,7 +242,7 @@ class _Payload:
 class IOSPayload(_Payload):
     def __init__(
         self,
-        alert: typing.Union[_PayloadAlert, str, None] = None,
+        alert: Union[_PayloadAlert, str, None] = None,
         badge=None,
         sound=None,
         category=None,
@@ -293,15 +292,15 @@ class IOSPayload(_Payload):
 class SafariPayload(_Payload):
     def __init__(
         self,
-        alert: typing.Union[_PayloadAlert, str, None] = None,
-        url_args: typing.Union[typing.List[str], None] = None,
+        alert: Union[_PayloadAlert, str, None] = None,
+        url_args: Union[List[str], None] = None,
         custom=None,
     ):
         super().__init__(alert=alert, custom=custom)
 
         self.url_args = url_args or []
 
-    def to_dict(self, alert_body: typing.Union[str, None] = None):
+    def to_dict(self, alert_body: Union[str, None] = None):
         d = super().to_dict(alert_body=alert_body)
         d["aps"]["url-args"] = self.url_args
         return d
