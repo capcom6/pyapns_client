@@ -66,9 +66,10 @@ def test_ios_payload():
         },
         "extra": "something",
     }
-    assert (
-        ios_payload.to_json()
-        == b'{"aps":{"alert":{"body":"my_alert"},"badge":2,"category":"my_category","content-available":1,"mutable-content":1,"sound":"chime","thread-id":"42"},"extra":"something"}'
+    assert ios_payload.to_json() == (
+        b'{"aps":{"alert":{"body":"my_alert"},"badge":2,"category":"my_category",'
+        b'"content-available":1,"mutable-content":1,"sound":"chime","thread-id":"42"},'
+        b'"extra":"something"}'
     )
 
 
@@ -134,10 +135,45 @@ def test_ios_payload_with_ios_payload_alert(ios_payload_alert: IOSPayloadAlert):
         },
         "extra": "something",
     }
-    assert (
-        payload.to_json()
-        == b'{"aps":{"alert":{"body":"body","launch-image":"img","loc-args":["body_loc_a"],"loc-key":"body_loc_k","subtitle":"subtitle","subtitle-loc-args":["subtitle_loc_a"],"subtitle-loc-key":"subtitle_loc_k","title":"title","title-loc-args":["title_loc_a"],"title-loc-key":"title_loc_k"},"badge":2,"category":"my_category","content-available":1,"mutable-content":1,"sound":"chime","thread-id":"42"},"extra":"something"}'
+    assert payload.to_json() == (
+        b'{"aps":{"alert":{"body":"body","launch-image":"img","loc-args":["body_loc_a"],'
+        b'"loc-key":"body_loc_k","subtitle":"subtitle","subtitle-loc-args":["subtitle_loc_a"],'
+        b'"subtitle-loc-key":"subtitle_loc_k","title":"title","title-loc-args":["title_loc_a"],'
+        b'"title-loc-key":"title_loc_k"},'
+        b'"badge":2,"category":"my_category","content-available":1,"mutable-content":1,'
+        b'"sound":"chime","thread-id":"42"},"extra":"something"}'
     )
+
+
+def test_ios_notification_with_ios_payload_alert(ios_payload_alert: IOSPayloadAlert):
+    ios_payload = IOSPayload(
+        alert=ios_payload_alert,
+        badge=2,
+        sound="chime",
+        content_available=True,
+        mutable_content=True,
+        category="my_category",
+        custom={"extra": "something"},
+        thread_id="42",
+    )
+    notification = IOSNotification(
+        ios_payload, "com.example.test", priority=IOSNotification.PRIORITY_LOW
+    )
+
+    assert notification.get_json_data() == (
+        b'{"aps":{"alert":{"body":"body","launch-image":"img","loc-args":["body_loc_a"],'
+        b'"loc-key":"body_loc_k","subtitle":"subtitle","subtitle-loc-args":["subtitle_loc_a"],'
+        b'"subtitle-loc-key":"subtitle_loc_k","title":"title","title-loc-args":["title_loc_a"],'
+        b'"title-loc-key":"title_loc_k"},'
+        b'"badge":2,"category":"my_category","content-available":1,"mutable-content":1,'
+        b'"sound":"chime","thread-id":"42"},"extra":"something"}'
+    )
+
+    assert notification.get_headers() == {
+        "Content-Type": "application/json; charset=utf-8",
+        "apns-priority": "5",
+        "apns-topic": "com.example.test",
+    }
 
 
 # Safari
