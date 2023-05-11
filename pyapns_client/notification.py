@@ -32,7 +32,8 @@ class _PayloadAlert:
         Converts the alert payload to a dictionary.
 
         Args:
-            alert_body (str or None): The body text of the alert. If not provided, the `body` attribute of this instance will be used.
+            alert_body (str or None): The body text of the alert. If not provided, the
+            `body` attribute of this instance will be used.
 
         Returns:
             dict: A dictionary representation of the alert payload.
@@ -121,7 +122,8 @@ class SafariPayloadAlert(_PayloadAlert):
         Converts the alert payload to a dictionary.
 
         Args:
-            alert_body (str or None): The body text of the alert. If not provided, the `body` attribute of this instance will be used.
+            alert_body (str or None): The body text of the alert. If not provided, the
+            `body` attribute of this instance will be used.
 
         Returns:
             dict: A dictionary representation of the alert payload.
@@ -138,7 +140,9 @@ class _Payload:
     Represents a push notification payload.
 
     Attributes:
-        MAX_PAYLOAD_SIZE (int): The maximum size of a push notification payload in bytes. See https://developer.apple.com/documentation/usernotifications/setting_up_a_remote_notification_server/generating_a_remote_notification#overview
+        MAX_PAYLOAD_SIZE (int): The maximum size of a push notification payload in
+        bytes. See
+        https://developer.apple.com/documentation/usernotifications/setting_up_a_remote_notification_server/generating_a_remote_notification#overview
     """
 
     MAX_PAYLOAD_SIZE = 4096
@@ -175,7 +179,8 @@ class _Payload:
         Converts the payload to a dictionary.
 
         Args:
-            alert_body (str or None): The body text of the alert. If not provided, the `body` attribute of this instance will be used.
+            alert_body (str or None): The body text of the alert. If not provided, the
+            `body` attribute of this instance will be used.
 
         Returns:
             dict: A dictionary representation of the payload.
@@ -224,7 +229,8 @@ class _Payload:
         Converts the payload to a JSON string.
 
         Args:
-            alert_body (str or None): The body text of the alert. If not provided, the `body` attribute of the `_PayloadAlert` object will be used.
+            alert_body (str or None): The body text of the alert. If not provided, the
+            `body` attribute of the `_PayloadAlert` object will be used.
 
         Returns:
             bytes: A JSON string representation of the payload.
