@@ -155,7 +155,7 @@ class _Payload:
             custom (dict or None): Custom data associated with the payload.
 
         Raises:
-            ValueError: If `alert` is not a string or a `_PayloadAlert` object.
+            TypeError: If `alert` is not a string or a `_PayloadAlert` object.
         """
         super().__init__()
 
