@@ -165,7 +165,7 @@ class _Payload:
             # Recommended to use dictionary, see https://developer.apple.com/documentation/usernotifications/setting_up_a_remote_notification_server/generating_a_remote_notification#2943360
             self.alert = _PayloadAlert(body=alert)
         else:
-            value_type = type(self.alert)
+            value_type = type(alert)
             raise TypeError(
                 f"alert must be a string or _PayloadAlert object, not a '{value_type}'"
             )
