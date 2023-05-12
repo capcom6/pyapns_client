@@ -181,6 +181,8 @@ class _Payload:
 
         Returns:
             dict: A dictionary representation of the payload.
+        Raises:
+            TypeError: If `alert` is not a string or a `_PayloadAlert` object.
         """
         d = {"aps": {}}
         if self.alert is not None:
@@ -190,7 +192,7 @@ class _Payload:
                 d["aps"]["alert"] = self.alert
             else:
                 value_type = type(self.alert)
-                raise ValueError(
+                raise TypeError(
                     f"alert must be a string or _PayloadAlert object, not a '{value_type}'"
                 )
         d.update(self.custom)
