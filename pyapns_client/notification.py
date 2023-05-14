@@ -186,15 +186,7 @@ class _Payload:
         """
         d = {"aps": {}}
         if self.alert is not None:
-            if isinstance(self.alert, _PayloadAlert):
-                d["aps"]["alert"] = self.alert.to_dict(alert_body=alert_body)
-            elif type(self.alert) == str:
-                d["aps"]["alert"] = self.alert
-            else:
-                value_type = type(self.alert)
-                raise TypeError(
-                    f"alert must be a string or _PayloadAlert object, not a '{value_type}'"
-                )
+            d["aps"]["alert"] = self.alert.to_dict(alert_body=alert_body)
         d.update(self.custom)
         return d
 
