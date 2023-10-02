@@ -83,6 +83,7 @@ setup(
             "black",
             "flake8",
             "wheel",
+            "isort",
         ]
     },
 )
