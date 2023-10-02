@@ -161,7 +161,7 @@ class _Payload:
 
         if isinstance(alert, _PayloadAlert) or alert is None:
             self.alert = alert
-        elif type(alert) == str:
+        elif isinstance(alert, str):
             # Recommended to use dictionary, see https://developer.apple.com/documentation/usernotifications/setting_up_a_remote_notification_server/generating_a_remote_notification#2943360
             self.alert = _PayloadAlert(body=alert)
         else:
