@@ -31,7 +31,7 @@ class CleanCommand(_clean):
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 
-README = open(os.path.join(os.path.dirname(__file__), "README.rst")).read()
+README = open(os.path.join(os.path.dirname(__file__), "README.md")).read()
 CHANGELOG = open(os.path.join(os.path.dirname(__file__), "CHANGELOG.rst")).read()
 
 
@@ -48,7 +48,7 @@ setup(
     author="Jakub Kleň",
     author_email="kukosk@gmail.com",
     maintainer="Aleksandr Soloshenko",
-    maintainer_email="capcom2me@gmail.com",
+    maintainer_email="i@capcom.me",
     platforms="any",
     classifiers=[
         "Development Status :: 5 - Production/Stable",
