@@ -1,7 +1,5 @@
 <a name="readme-top"></a>
 
-# pyapns_client3
-
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge)](https://github.com/capcom6/pyapns_client/blob/main/LICENSE)
 [![GitHub Issues](https://img.shields.io/github/issues/capcom6/pyapns_client.svg?style=for-the-badge)](https://github.com/capcom6/pyapns_client/issues)
 [![GitHub Stars](https://img.shields.io/github/stars/capcom6/pyapns_client.svg?style=for-the-badge)](https://github.com/capcom6/pyapns_client/stargazers)
@@ -25,22 +23,21 @@
 
 
 <!-- TABLE OF CONTENTS -->
-- [pyapns\_client3](#pyapns_client3)
-  - [Features](#features)
-  - [Built with](#built-with)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-  - [Usage](#usage)
-    - [Client](#client)
-    - [Authentificator](#authentificator)
-    - [Payload](#payload)
-    - [Exceptions](#exceptions)
-    - [Logging](#logging)
-  - [Example](#example)
-  - [Roadmap](#roadmap)
-  - [Contributing](#contributing)
-  - [License](#license)
-  - [Contact](#contact)
+- [Features](#features)
+- [Built with](#built-with)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Client](#client)
+  - [Authentificator](#authentificator)
+  - [Payload](#payload)
+  - [Exceptions](#exceptions)
+  - [Logging](#logging)
+- [Example](#example)
+- [Roadmap](#roadmap)
+- [Contributing](#contributing)
+- [License](#license)
+- [Contact](#contact)
 
 
 

@@ -1,4 +1,4 @@
 
 include CHANGELOG.rst
-include README.rst
-include LICENSE.rst
+include README.md
+include LICENSE
