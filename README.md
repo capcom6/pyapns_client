@@ -143,7 +143,7 @@ async def send_push_notifications():
             payload = IOSPayload(alert='Hello from pyapns_client3!', sound='default')
 
             # Create the notification object with the payload and other optional parameters
-            notification = IOSNotification(payload=payload, priority=10)
+            notification = IOSNotification(payload=payload, priority=10, topic='BUNDLE_ID')
 
             # Send the notification asynchronously to one or more device tokens
             await client.push(notification=notification, device_token='DEVICE_TOKEN_HERE')
